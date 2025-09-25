@@ -7,6 +7,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PenerimaanBarangController;
+use App\Http\Controllers\PengeluaranBarangController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -21,6 +22,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('get-data')->as('get-data.')->group(function () {
         Route::get('/produk', [ProductController::class, 'getData'])->name('produk');
         Route::get('/cek-stok-produk', [ProductController::class, 'cekStok'])->name('cek-stok');
+        Route::get('cek-harga-produk', [ProductController::class, 'cekHarga'])->name('cek-harga'); 
     });
 
     Route::prefix('users')->as('users.')->controller(UserController::class)->group(function () {
@@ -46,6 +48,10 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+    Route::prefix('pengeluaran-barang')->as('pengeluaran-barang.')->controller(PengeluaranBarangController::class)->group(function() {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'store')->name('store');
+    });
     Route::prefix('penerimaan-barang')->as('penerimaan-barang.')->controller(PenerimaanBarangController::class)->group(function() {
         Route::get('/', 'index')->name('index');
         Route::post('/', 'store')->name('store');
