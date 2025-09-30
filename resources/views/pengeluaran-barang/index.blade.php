@@ -42,6 +42,7 @@
                                         <tr>
                                             <th>Nama Produk</th>
                                             <th>Qty</th>
+                                            <th>Harga Jual</th>
                                             <th>Sub Total</th>
                                             <th>Opsi</th>
                                         </tr>
