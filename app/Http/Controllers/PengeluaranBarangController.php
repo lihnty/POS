@@ -7,6 +7,7 @@ use App\Models\PengeluaranBarang;
 use App\Models\ItemPengeluaranBarang;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class PengeluaranBarangController extends Controller
 {
@@ -69,7 +70,23 @@ class PengeluaranBarangController extends Controller
 
         toast()->success('Transaksi disimpan');
         return redirect()->route('pengeluaran-barang.index');
+    }
 
-        dd($bayar, $total, $kembalian);
+    public function laporan()
+    {
+        $data = PengeluaranBarang::orderBy('created_at', 'desc')->get()->map(function($item) {
+            $item->tanggal_transaksi = Carbon::parse($item->created_at)->locale('id')->translatedFormat('l,d F Y');
+            return $item;
+        });
+
+        return view('pengeluaran-barang.laporan', compact('data'));
+    }
+
+    public function detailLaporan(String $nomor_pengeluaran)
+    {
+        $data = PengeluaranBarang::with('items')->where('nomor_pengeluaran', $nomor_pengeluaran)->first();
+        $data->total_harga = $data->items->sum('sub_total');
+        $data->tanggal_transaksi = Carbon::parse($data->created_at)->locale('id')->translatedFormat('l,d F Y');
+        return view('pengeluaran-barang.detail', compact('data'));
     }
 }
